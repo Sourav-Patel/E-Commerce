@@ -1,0 +1,32 @@
+<%- include('partials/headers/login-header') %>
+
+<!-- Sign In Form  -->
+
+<form class="form-signin">
+
+    <!-- logo  -->
+    <img class="mb-4" src="images/logo.png" alt="" width="72" height="72">
+    
+    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+
+    <!-- Email Address  -->
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+    
+    <!-- Password -->
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    
+    <!-- Sign In Button -->
+    <button class="btn btn-lg btn-light btn-block" type="submit">Sign in</button>
+
+    <!-- Register Button  -->
+    <a href="/register" class="btn btn-lg btn-dark btn-block">Register</a>
+
+    <!-- Forgot Password -->
+    <p class="mt-5 mb-3 text-muted"><a class="forgot-pswd" href="/forgot">Forgot Password</a></p>
+
+
+</form>
+
+<%- include('partials/footer') %>
