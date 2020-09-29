@@ -20,15 +20,23 @@ app.route('/contact').get(function (req, res) {
 
 app.route('/login').get(function (req, res) {
     // Get Method for Login
-    res.render('login')
+    res.render('login');
 }).post(function (req, res) { 
     // Post Method for Login
  });
 
 app.route('/register').get(function (req, res) { 
     // Get Method for register
+    res.render('register');
  }).post(function (req, res) { 
      // Post Method for register
+  });
+
+app.route('/forgot-password').get(function (req, res) { 
+    // Get Method for Forgot Password
+    res.render('forgot-password');
+ }).post(function (req, res) { 
+     // Post Method for Forgot Password
   });
 
 const port = 3000;
