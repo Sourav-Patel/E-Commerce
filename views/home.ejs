@@ -1,11 +1,34 @@
 <%- include('partials/headers/header') %>
 
 <!-- Navbar Title  -->
-<div class="fluid-container navbar-title">
+
+<div class="fluid-container navbar-title" style="display: flex;">
+
+    <!-- Side Navbar Button  -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="openNav()">
+        <span style="font-size:30px;cursor:pointer">&#9776;</span> </button>
+
+        <!-- Site Title  -->
     <a class="navbar-brand" href="#">AVR Solutions</a>
+
 </div>
 
+<!-- sideBar menu  -->
+
+<div id="mySidenav" class="sidenav">
+    <div class="sidenav-content">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Item 1</a>
+        <a href="#">Item 2</a>
+        <a href="#">Item 3</a>
+        <a href="#">Item 4</a>
+    </div>
+</div>
+
+
 <!-- Sub Navbar  -->
+
 <div class="fluid-container sub-navbar">
 
     <!-- Sub Navbar links  -->
@@ -51,7 +74,10 @@
 
 </div>
 
+
 <!-- Carousel -->
+
+
 <div id="main-carousel" class="carousel slide" data-ride="carousel">
 
     <!-- item numbers -->
@@ -64,13 +90,13 @@
     <!-- items -->
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img class="d-block w-100" src="images/carousel.jpg" alt="First slide">
+            <img class="d-block w-100" src="images/banner.png" alt="First slide">
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="images/carousel.jpg" alt="Second slide">
+            <img class="d-block w-100" src="images/banner.png" alt="Second slide">
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="images/carousel.jpg" alt="Third slide">
+            <img class="d-block w-100" src="images/banner.png" alt="Third slide">
         </div>
     </div>
 
@@ -85,5 +111,16 @@
     </a>
 
 </div>
+
+<!-- Side Navbar Menu Script  -->
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "40%";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
 
 <%- include('partials/footer') %>

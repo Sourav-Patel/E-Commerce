@@ -50,3 +50,59 @@
 .nav-link:hover {
     color: #fff;
 }
+
+.navbar-toggler{
+    display: none;
+}
+
+.navbar-brand{
+    margin-left: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .sub-navbar{
+        display: none;
+    }
+
+    .navbar-toggler{
+        display: inline-block;
+    }
+
+    .navbar-brand{
+        margin-left: 0;
+    }
+  }
+
+  .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    background-color:  rgb(14, 13, 11);
+    overflow-x: hidden;
+    transition: 0.5s;
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color:  #FEE715FF;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .sidenav-content{
+      padding-top: 2.5rem;
+  }

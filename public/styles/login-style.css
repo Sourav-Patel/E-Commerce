@@ -47,3 +47,19 @@ body {
     text-decoration: none;
     color: #111213;
 }
+
+.form-control:focus{
+  border-color: white;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(40, 41, 41, 0.25);
+}
+
+.navbar-title {
+  height: 40px;
+  background: #FEE715FF;
+  text-align: center;
+}
+
+.navbar-brand {
+  color: black;
+}
