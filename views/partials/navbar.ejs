@@ -1,0 +1,73 @@
+<!-- Navbar Title  -->
+
+<div class="fluid-container navbar-title" style="display: flex;">
+
+    <!-- Side Navbar Button  -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="openNav()">
+        <span style="font-size:30px;cursor:pointer">&#9776;</span> </button>
+
+    <!-- Site Title  -->
+    <a class="navbar-brand" href="/">AVR Solutions</a>
+
+</div>
+
+<!-- sideBar menu  -->
+
+<div id="mySidenav" class="sidenav">
+    <div class="sidenav-content">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Item 1</a>
+        <a href="#">Item 2</a>
+        <a href="#">Item 3</a>
+        <a href="#">Item 4</a>
+    </div>
+</div>
+
+
+<!-- Sub Navbar  -->
+
+<div class="fluid-container sub-navbar">
+
+    <!-- Sub Navbar links  -->
+
+    <ul class="navbar-ul">
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/about">About us</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/product">Products</a>
+        </li>
+
+        <!-- Categories Dropdown -->
+
+        <div class="dropdown">
+            <button class="btn btn-navbar dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" >
+                Categories
+            </button>
+
+            <!-- Sub Categories Menu List-->
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Sub Categories</a>
+            </div>
+
+        </div>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact us</a>
+        </li>
+
+    </ul>
+
+</div>
