@@ -133,3 +133,9 @@ div.scrollmenu a {
 div.scrollmenu a:hover {
     opacity: 0.8;
 }
+
+.about-us {
+    padding: 10%;
+    margin-top: 2rem;
+    border-radius: 10px;
+}
