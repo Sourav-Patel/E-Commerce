@@ -139,3 +139,17 @@ div.scrollmenu a:hover {
     margin-top: 2rem;
     border-radius: 10px;
 }
+
+.stock-btn:hover{
+    color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.all-offer{
+    display: none;
+}
+
+.lim-offer{
+    display: block;
+}
