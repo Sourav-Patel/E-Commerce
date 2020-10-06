@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// creting productSchema
 const productSchema = mongoose.Schema({
 
     title: {
@@ -98,5 +99,5 @@ const productSchema = mongoose.Schema({
     },
 });
 
-
+// exporting model for productSchema
 module.exports = mongoose.model("Product", productSchema);

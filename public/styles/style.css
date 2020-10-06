@@ -153,3 +153,250 @@ div.scrollmenu a:hover {
 .lim-offer{
     display: block;
 }
+
+
+
+ .mag-p{
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+  }
+  .mag-h4 {
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transform: scale(0);
+    transition: all 0.3s;
+    position: relative;
+    top: -25px;
+    margin: 0;
+    font-weight: normal;
+  }
+  .mag-h4.show {
+    animation: alert 0.18s ease-in-out;
+    animation-fill-mode: forwards;
+  }
+  @keyframes alert {
+    0%{
+      transform: scale(0);
+    }
+    80% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .mag-form {
+    transition: all 0.15s;
+  }
+  .mag-form.explode {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  
+  .mag-form {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .mag-input[type="submit"]{
+    display: none !important;
+  }
+  .mag-input {
+    width: 100%;
+  }
+  .mag-input {
+    background: none;
+    border: 3px solid #fff;
+    border-radius: 26px;
+    box-sizing: border-box;
+    padding: 5px 15px 7px;
+    font-size: 14px;
+    color: #fff;
+    z-index: 2;
+    position: relative;
+  }
+  .mag-input:focus {
+    outline: none;
+  }
+  .mag-after {
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    top: 1px;
+    right: 0;
+    z-index: 1;
+  }
+  .mag-form.open .after {
+   cursor: pointer;
+  }
+  .mag-after:before,
+  .mag-after:after {
+    content: '';
+    width: 13px;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 3px;
+    position: absolute;
+    transform-origin: 100% 100%;
+  }
+  .mag-after:after{
+    bottom: -3px;
+    right: -3px;
+    transform: rotate(45deg);
+  }
+  .mag-after:before {
+    top: -3px;
+    right: -3px;
+    transform: rotate(-45deg);
+    opacity: 0;
+  }
+  .mag-form,
+  .mag-form .after,
+  .mag-form .after:before,
+  .mag-form .after:after {
+    animation-duration: 1.1s;
+    animation-fill-mode: forwards;
+  }
+  .mag-form.in {
+    animation-name: expand;
+  }
+  .mag-form.in .mag-after:before {
+    animation-name: beforemagic;
+  }
+  form.in .after:after {
+    animation-name: aftermagic;
+  }
+  
+  .mag-form.close,
+  .mag-form.close .mag-after,
+  .mag-form.close .mag-after:before,
+  .mag-form.close .mag-after:after {
+    animation-direction: reverse;
+  }
+  .mag-form.close {
+    animation-name: expand;
+  }
+  .mag-form.close .mag-after:before {
+    animation-name: beforemagic;
+  }
+  .mag-form.close .mag-after:after {
+    animation-name: aftermagic;
+  }
+  
+  /* Hold final focused state
+   ****************************/
+   .mag-form.open {
+    width: 250px;
+    color: #fff;
+  }
+  .mag-form.open .mag-after {
+    z-index: 3;
+  }
+  .mag-form.open .mag-after:before {
+    width: 20px;
+    top: 9px;
+    right: 13px;
+    opacity: 1;
+  }
+  .mag-form.open .after:after {
+    width: 20px;
+    bottom: 10px;
+    right: 15px;
+  }
+  
+  @keyframes aftermagic {
+    0%   {}
+    10% {
+      width: 24px;
+      bottom: -10px;
+      right: -10px;
+    }
+    15%{
+      opacity: 1;
+    }
+    35% {
+      width: 13px;
+      bottom: -3px;
+      right: -3px;
+       opacity: 0;
+      
+    }
+    25% {
+      opacity: 0;
+    }
+    64% {
+      opacity: 0;
+    }
+    65% {
+      opacity: 1;
+      width: 13px;
+      bottom: -2px;
+      right: -3px;
+    }
+    75% {
+      width: 30px;
+      bottom: 4px;
+      right: 10px;
+    }
+    90% {
+      width: 20px;
+      bottom: 10px;
+      right: 15px;
+    }
+    100% {
+      width: 20px;
+      bottom: 10px;
+      right: 15px;
+    }
+  }
+  @keyframes beforemagic {
+    0%   {}
+    50% {
+      opacity: 0;
+    }
+    55% {
+      opacity: 1;
+      width: 13px;
+      top: -4px;
+      right: -3px;
+    }
+    65% {
+      width: 30px;
+      top: 6px;
+      right: 10px;
+    }
+    80% {
+      width: 20px;
+      top: 9px;
+      right: 13px;
+    }
+    100% {
+      width: 20px;
+      top: 9px;
+      right: 13px;
+      opacity: 1;
+    }
+  }
+  @keyframes expand {
+      0%   {
+        color: transparent;
+      }
+    20% {
+      width: 36px;
+    }
+    45% {
+      width: 250px;
+    }
+    99% {
+      color: transparent;
+    }
+      100% {
+        width: 250px;
+        color: #fff;
+      }
+  }

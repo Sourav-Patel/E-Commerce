@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
+const { schema } = require('./blog');
 
+// creating customer schema
 const customerSchema = mongoose.Schema({
     first_name: {
         type: String,
-        required: true
     },
     last_name: {
         type: String,
-        required: true
     },
     email: {
         type: String,
@@ -27,31 +27,22 @@ const customerSchema = mongoose.Schema({
         {
             address_line_1:{
                 type:String,
-                required:true
             },
             address_line_2:{
                 type:String
             },
             landmark:{
                 type:String,
-                required:true
             },
             city:{
                 type:String,
-                required:true
             },
             state:{
                 type:String,
-                required:true
             },
             pincode:{
                 type:Number,
-                required:true
             },
-            default:{
-                type:Boolean,
-                unique:true
-            }
         }
     ],
     cart:[{
@@ -70,5 +61,5 @@ const customerSchema = mongoose.Schema({
 
 });
 
-
+// exporting model for customerSchema
 module.exports =  mongoose.model("Customer", customerSchema);
