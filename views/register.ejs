@@ -9,17 +9,17 @@
     
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
 
-<form action="/register" method="post">
+<form action="/register" method="POST" >
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="fName">First Name</label>
-            <input class="form-control" type="text" name="fName" id="fname" required>
+            <label for="fname">First Name</label>
+            <input class="form-control" type="text" name="fname" id="fname" required>
         </div>
 
         <div class="form-group col-md-6">
-            <label for="lName">Last Name</label>
-            <input class="form-control" type="text" name="lName" id="lname" required>
+            <label for="lname">Last Name</label>
+            <input class="form-control" type="text" name="lname" id="lname" required>
         </div>
     </div>
 
@@ -29,8 +29,8 @@
         <input class="form-control" type="email" name="email" id="email" required>
     </div>
     <div class="form-group">
-        <label for="number">Mobile Number</label>
-        <input class="form-control" type="tel" name="number" id="number" required pattern="[0-9]{10}">
+        <label for="mobile">Mobile Number</label>
+        <input class="form-control" type="tel" name="mobile" id="mobile" required pattern="[0-9]{10}">
     </div>
 
     <div class="form-group">
