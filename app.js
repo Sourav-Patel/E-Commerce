@@ -8,6 +8,14 @@ const AdminBroExpress = require('admin-bro-expressjs');
 const AdminBroMongoose = require('admin-bro-mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+var cookieParser = require('cookie-parser');
+// var csrf = require('csurf');
+var session = require('express-session')
+const passport = require('passport');
+const flash = require('connect-flash');
+
+
+// var csrfProtection = csrf();
 
 
 // Connecting MongoDB
@@ -18,11 +26,11 @@ mongoose.connect(process.env.MONGOLAB_URI, {
 });
 mongoose.set("useCreateIndex", true);
 
-// Importing Schemas 
+// Importing Models
 
-const Product = require(__dirname + "/schemas/Product");
-const Customer = require(__dirname + "/schemas/Customer");
-const Blog = require(__dirname + "/schemas/blog");
+const Product = require(__dirname + "/models/Product");
+const Customer = require(__dirname + "/models/Customer");
+const Blog = require(__dirname + "/models/blog");
 
 
 // Admin Bro Adapter
@@ -53,7 +61,7 @@ const adminrouter = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
     authenticate: async (email, password) => {
 
 
-        if (ADMIN.password === hashed && ADMIN.email === email) {
+        if (ADMIN.password === password && ADMIN.email === email) {
             return ADMIN
         }
         return null
@@ -77,6 +85,27 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+
+
+// Using Cookie Parser 
+app.use(cookieParser());
+
+// Using sessions 
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+}));
+
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport');
+// Using csurf 
+// app.use(csrfProtection);
+
+
 
 // Requiring routes 
 require('./routes/home')(app);
@@ -106,7 +135,9 @@ app.route('/login').get(function (req, res) {
     // Get Method for Login
 
     // Render login page 
-    res.render('login');
+    res.render('login', {
+        hasError: false
+    });
 }).post(function (req, res) {
     // Post Method for Login
 
@@ -116,7 +147,8 @@ app.route('/login').get(function (req, res) {
     }, function (err, result) {
         if (err) {
             console.log(err);
-        } else {
+        }
+        if (result) {
 
             // Comparing hashed password via bcrypt 
             bcrypt.compare(req.body.password, result.password, function (err, result) {
@@ -124,10 +156,23 @@ app.route('/login').get(function (req, res) {
                 if (result) {
                     console.log("logged in successfully");
                     // Redirecting to home route after authentication (aunthentication pending)
-                    res.redirect("/");
+                    res.redirect("/user/profile");
                 } else {
                     console.log("Password not Matched");
+                    var message = "Wrong Password"
+                    res.render("login", {
+                        hasError: true,
+                        message: message
+                    });
                 }
+            });
+        }
+        if (!result) {
+
+            var message = "Wrong Email"
+            res.render("login", {
+                hasError: true,
+                message: message
             });
         };
     });
@@ -136,34 +181,18 @@ app.route('/login').get(function (req, res) {
 app.route('/register').get(function (req, res) {
     // Get Method for register
 
+    var messages = req.flash("error");
+    // csrfToken: req.csrfToken()
     // Rendering register.ejs 
-    res.render('register');
-}).post(function (req, res) {
-    // Post Method for register
-
-    // Storing registered user information and hashing password
-    bcrypt.hash(req.body.password, 5, function (err, hash) {
-        // Store hash in your password DB.
-        var newUser = new Customer({
-            first_name: req.body.fname,
-            last_name: req.body.lname,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            password: hash
-        });
-
-        // saving new user in DB 
-        newUser.save(function (err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(result);
-            }
-            // After successfull save redirecting to login page
-            res.redirect("/login");
-        });
+    res.render('register', {
+        messages: messages,
+        hasError: messages.length > 0
     });
-});
+}).post(passport.authenticate("local.signup", {
+    successRedirect: "/user/profile",
+    failureRedirect: "/register",
+    failureFlash: true
+}));
 
 app.route('/forgot-password').get(function (req, res) {
     // Get Method for Forgot Password
@@ -188,6 +217,15 @@ app.route('/product').get(function (req, res) {
 
     // Rendring product.ejs 
     res.render('product');
+}).post(function (req, res) {
+    // Post Method for Checkout
+});
+
+app.route('/user/profile').get(function (req, res) {
+    // Get Method for Checkout
+
+    // Rendring product.ejs 
+    res.render('profile');
 }).post(function (req, res) {
     // Post Method for Checkout
 });
