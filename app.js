@@ -105,7 +105,13 @@ require('./config/passport');
 // Using csurf 
 // app.use(csrfProtection);
 
-
+app.use(function (req, res, next) { 
+    res.locals.login = req.isAuthenticated();
+    if (req.isAuthenticated()) {
+        res.locals.userId = req.user.Id;
+    }
+    next();
+ });
 
 // Requiring routes 
 require('./routes/home')(app);
@@ -131,54 +137,24 @@ app.route('/blog').get(function (req, res) {
     // Post Method Function for contact
 });
 
-app.route('/login').get(function (req, res) {
+app.route('/login').get(notLoggedIn, function (req, res) {
     // Get Method for Login
 
     // Render login page 
+    var messages = req.flash("error");
+    // csrfToken: req.csrfToken()
+    // Rendering register.ejs 
     res.render('login', {
-        hasError: false
+        messages: messages,
+        hasError: messages.length > 0
     });
-}).post(function (req, res) {
-    // Post Method for Login
+}).post(passport.authenticate("local.login", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true
+}));
 
-    // Finding customer by email from DB 
-    Customer.findOne({
-        email: req.body.email
-    }, function (err, result) {
-        if (err) {
-            console.log(err);
-        }
-        if (result) {
-
-            // Comparing hashed password via bcrypt 
-            bcrypt.compare(req.body.password, result.password, function (err, result) {
-                // if result == true
-                if (result) {
-                    console.log("logged in successfully");
-                    // Redirecting to home route after authentication (aunthentication pending)
-                    res.redirect("/user/profile");
-                } else {
-                    console.log("Password not Matched");
-                    var message = "Wrong Password"
-                    res.render("login", {
-                        hasError: true,
-                        message: message
-                    });
-                }
-            });
-        }
-        if (!result) {
-
-            var message = "Wrong Email"
-            res.render("login", {
-                hasError: true,
-                message: message
-            });
-        };
-    });
-});
-
-app.route('/register').get(function (req, res) {
+app.route('/register').get(notLoggedIn, function (req, res) {
     // Get Method for register
 
     var messages = req.flash("error");
@@ -194,7 +170,7 @@ app.route('/register').get(function (req, res) {
     failureFlash: true
 }));
 
-app.route('/forgot-password').get(function (req, res) {
+app.route('/forgot').get(notLoggedIn, function (req, res) {
     // Get Method for Forgot Password
 
     // Rendring forgot-password.ejs 
@@ -203,12 +179,12 @@ app.route('/forgot-password').get(function (req, res) {
     // Post Method for Forgot Password
 });
 
-app.route('/checkout').get(function (req, res) {
+app.route('/checkout').get(isLoggedIn, function (req, res) {
     // Get Method for Checkout
 
     // Rendring checkout.ejs 
     res.render('checkout');
-}).post(function (req, res) {
+}).post(isLoggedIn, function (req, res) {
     // Post Method for Checkout
 });
 
@@ -221,14 +197,33 @@ app.route('/product').get(function (req, res) {
     // Post Method for Checkout
 });
 
-app.route('/user/profile').get(function (req, res) {
-    // Get Method for Checkout
+app.get("/user/profile", isLoggedIn, function (req, res) { 
+    res.render('profile')
+ } );
 
-    // Rendring product.ejs 
-    res.render('profile');
-}).post(function (req, res) {
-    // Post Method for Checkout
-});
+app.get("/user/logout", isLoggedIn, function (req, res, next) { 
+    req.logout();
+    res.redirect('/');
+ })
+
+
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        //req.isAuthenticated() will return true if user is logged in
+        next();
+    } else{
+        res.redirect("/login");
+    }
+}
+
+function notLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        //req.isAuthenticated() will return true if user is logged in
+        res.redirect("/");
+    } else{
+        next();
+    }
+}
 
 // Listening App on ENV Port 
 let port = process.env.PORT;

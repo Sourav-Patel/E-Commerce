@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { schema } = require('./blog');
+const bcrypt = require('bcrypt');
 
 // creating customer schema
 const customerSchema = mongoose.Schema({
@@ -59,6 +59,10 @@ const customerSchema = mongoose.Schema({
     }
 
 });
+
+customerSchema.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 // exporting model for customerSchema
 module.exports =  mongoose.model("Customer", customerSchema);

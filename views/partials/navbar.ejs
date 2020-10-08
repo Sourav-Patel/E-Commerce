@@ -3,23 +3,63 @@
 <div class="fluid-container navbar-title" style="display: flex;">
 
     <!-- Side Navbar Button  -->
-    
+
     <!-- Site Title  -->
 
-    <a class="navbar-brand" href="#">
-    <img src="images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    AVR Solutions
-    </a>
-
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="openNav()">
         <span style="font-size:30px;cursor:pointer">&#9776;</span> </button>
 
-        <div style=" position: absolute;
+    <a class="navbar-brand" href="/">
+        <img class="navbar-logo" src="../images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        AVR Solutions
+    </a>
+
+
+
+
+
+    <div style=" position: absolute;
         right: 10px;
-        top: 6px;">
-            <a href="/cart" style="text-decoration: none; color: #000;"><i class="fa fa-shopping-cart" style="font-size:24px"></i></a>
+        top: 8px; display: flex;
+    flex-flow: row;
+    position: absolute;">
+
+    <% if (login) { %>
+        <div class="dropdown">
+            <a class="navbar-login dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 1rem; text-decoration: none; color: #000;" ><i
+                    class="fa fa-sign-in-alt" style="margin-right: 5px;"></i>Profile</a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/user/profile">Profile</a>
+                        <a class="dropdown-item" href="/user/logout">Logout</a>
+                      </div>
+            <!-- <a class="btn" style="margin-right: 0.5rem;" href="/register"><i class="fa fa-user-plus" style="margin-right: 5px;" ></i>Register</a> -->
         </div>
+    <% }else{ %>
+        <div>
+            <a class="navbar-login" style="margin-right: 1rem; text-decoration: none; color: #000;" href="/login"><i
+                    class="fa fa-sign-in-alt" style="margin-right: 5px;"></i>Login</a>
+            <!-- <a class="btn" style="margin-right: 0.5rem;" href="/register"><i class="fa fa-user-plus" style="margin-right: 5px;" ></i>Register</a> -->
+        </div>       
+        <% } %>
+
+<!-- 
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" >
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div> -->
+        <div>
+            <a class="navbar-cart" href="/cart" style="text-decoration: none; color: #000;"><i
+                    class="fa fa-shopping-cart" style="font-size:26px"></i></a>
+        </div>
+    </div>
 
 
 </div>
@@ -61,7 +101,7 @@
 
         <div class="dropdown">
             <button class="btn btn-navbar dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" >
+                aria-haspopup="true" aria-expanded="false">
                 Categories
             </button>
 
