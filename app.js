@@ -40,7 +40,31 @@ AdminBro.registerAdapter(AdminBroMongoose);
 
 // Admin bro options 
 
+
+const productParent = {
+    name: 'Products',
+    icon: 'Accessibility',
+  }
+
+  const userParent = {
+    name: 'Customers',
+    icon: 'Accessibility',
+  }
+
+  const blogParent = {
+    name: 'Blogs',
+    icon: 'Accessibility',
+  }
+
 const adminBro = new AdminBro({
+    dashboard: {
+        component: AdminBro.bundle('./my-dashboard-component')
+      },
+    resources: [
+        { resource: Product, options: { parent: productParent } },
+        { resource: Customer, options: { parent: userParent, properties: { password : {isVisible: { list: false, filter: false, show: false, edit: false }}} }  },
+        { resource: Blog, options: { parent: blogParent }}
+      ],
     databases: [mongoose],
     rootPath: '/admin',
     branding: {
@@ -224,6 +248,10 @@ function notLoggedIn(req,res,next){
         next();
     }
 }
+
+app.use(function (req, res, next) {
+    res.status(404).send("Aww... Looking for somwthing that is not exist. ㋡")
+  });
 
 // Listening App on ENV Port 
 let port = process.env.PORT;
