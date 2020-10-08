@@ -11,6 +11,12 @@
     
     <h1 class="h3 mb-3 font-weight-normal">Login</h1>
 
+    <% if (hasError) { %>
+        <div class="alert alert-danger">
+            <p><%= message %> </p>
+        </div>  
+    <% } %>
+
     <!-- Email Address  -->
     <label for="email" class="sr-only">Email address</label>
     <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required autofocus>
