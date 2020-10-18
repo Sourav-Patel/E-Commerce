@@ -13,6 +13,9 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session')
 const passport = require('passport');
 const flash = require('connect-flash');
+const {
+    findById
+} = require('./models/Customer');
 
 
 // var csrfProtection = csrf();
@@ -33,6 +36,15 @@ const Customer = require(__dirname + "/models/Customer");
 const Blog = require(__dirname + "/models/blog");
 
 
+
+const cartSchema = mongoose.Schema({
+    customerId: Object,
+    cart: Object
+});
+
+
+const Cart = mongoose.model("Cart", cartSchema);
+
 // Admin Bro Adapter
 
 AdminBro.registerAdapter(AdminBroMongoose);
@@ -44,27 +56,51 @@ AdminBro.registerAdapter(AdminBroMongoose);
 const productParent = {
     name: 'Products',
     icon: 'Accessibility',
-  }
+}
 
-  const userParent = {
+const userParent = {
     name: 'Customers',
     icon: 'Accessibility',
-  }
+}
 
-  const blogParent = {
+const blogParent = {
     name: 'Blogs',
     icon: 'Accessibility',
-  }
+}
 
 const adminBro = new AdminBro({
     dashboard: {
         component: AdminBro.bundle('./my-dashboard-component')
-      },
-    resources: [
-        { resource: Product, options: { parent: productParent } },
-        { resource: Customer, options: { parent: userParent, properties: { password : {isVisible: { list: false, filter: false, show: false, edit: false }}} }  },
-        { resource: Blog, options: { parent: blogParent }}
-      ],
+    },
+    resources: [{
+            resource: Product,
+            options: {
+                parent: productParent
+            }
+        },
+        {
+            resource: Customer,
+            options: {
+                parent: userParent,
+                properties: {
+                    password: {
+                        isVisible: {
+                            list: false,
+                            filter: false,
+                            show: false,
+                            edit: false
+                        }
+                    }
+                }
+            }
+        },
+        {
+            resource: Blog,
+            options: {
+                parent: blogParent
+            }
+        }
+    ],
     databases: [mongoose],
     rootPath: '/admin',
     branding: {
@@ -126,20 +162,59 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport');
+var Cart_loc = require('./models/cart');
+const cart = require('./models/cart');
 // Using csurf 
 // app.use(csrfProtection);
 
-app.use(function (req, res, next) { 
+app.use(function(req, res, next) {
     res.locals.login = req.isAuthenticated();
+    
+    res.locals.session = req.session;
+  
+    next();
+});
+
+app.all("*", function (req, res, next) { 
+    res.locals.cart = null;
     if (req.isAuthenticated()) {
-        res.locals.userId = req.user.Id;
+        res.locals.userId = req.user.id;
+        Cart.findOne({customerId : req.user.id}, function (err, result) { 
+            if (err) {
+                console.log(err);
+                res.locals.cart = null;
+            }
+            if (result) {
+                res.locals.cart = result;
+            }
+            if (!result) {
+                res.locals.cart = null;
+            }
+            
+         })
     }
     next();
  });
 
 // Requiring routes 
-require('./routes/home')(app);
+
 require('./routes/contact')(app);
+
+app.route('/').get(function (req, res) {
+    // Get Method for Home
+    Product.findOne({}, function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render('home', {
+                product: result
+            });
+        }
+    });
+
+}).post(function (req, res) {
+    // Post Method for Home
+});
 
 // More Routes 
 app.route('/about').get(function (req, res) {
@@ -221,37 +296,113 @@ app.route('/product').get(function (req, res) {
     // Post Method for Checkout
 });
 
-app.get("/user/profile", isLoggedIn, function (req, res) { 
-    res.render('profile')
- } );
+app.route('/product/:productId').get(function (req, res) {
+    // Get Method for Checkout
+    var requestedId = req.params.productId;
+    // Rendring product.ejs 
+    res.render('product');
+}).post(function (req, res) {
+    // Post Method for Checkout
+});
 
-app.get("/user/logout", isLoggedIn, function (req, res, next) { 
+app.route("/add-to-cart/:id").get(isLoggedIn, function (req, res) {
+    var productId = req.params.id;
+    var cart;
+    Cart.findOne({
+        customerId: req.user.id
+    }, function (err, foundCart) {
+        if (err) {
+            console.log(err);
+        } if(foundCart) {
+            
+            var oldCart = foundCart.cart;
+
+            var newCart = new Cart_loc(oldCart ? foundCart : {});
+
+            Product.findById(productId, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                }
+                newCart.addItem(result, result.id);
+
+
+                Cart.findOneAndUpdate({
+                    customerId: req.user.id
+                }, {
+                    $set: {
+                        cart: newCart
+                    }
+                }, null, function (err) {
+                    if (!err) {
+                        console.log("updated succesfully");
+                    }
+                })
+                res.redirect('back');
+            })
+
+        } if (!foundCart) {
+
+            var dummyCart = {cart: {
+                items: null
+            }};
+            var newCart = new Cart_loc( dummyCart);
+
+            Product.findById(productId, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                }
+                newCart.addItem(result, result.id);
+
+                var toSave = new Cart({
+                    customerId: req.user.id,
+                    cart: newCart
+                });
+                toSave.save();
+                res.redirect('back');
+            })
+        }
+
+    })
+
+});
+
+app.route("/user/profile").get(isLoggedIn, function (req, res) {
+    res.render('profile')
+});
+
+app.get("/user/logout", isLoggedIn, function (req, res, next) {
     req.logout();
     res.redirect('/');
- })
+});
+
+app.get("/cart", function (req, res) {
+    res.render('cart');
+})
 
 
-function isLoggedIn(req,res,next){
-    if(req.isAuthenticated()){
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
         //req.isAuthenticated() will return true if user is logged in
         next();
-    } else{
+    } else {
         res.redirect("/login");
     }
 }
 
-function notLoggedIn(req,res,next){
-    if(req.isAuthenticated()){
+function notLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
         //req.isAuthenticated() will return true if user is logged in
         res.redirect("/");
-    } else{
+    } else {
         next();
     }
 }
 
 app.use(function (req, res, next) {
     res.status(404).send("Aww... Looking for somwthing that is not exist. ㋡")
-  });
+});
 
 // Listening App on ENV Port 
 let port = process.env.PORT;

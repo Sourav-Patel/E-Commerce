@@ -44,9 +44,7 @@ const customerSchema = mongoose.Schema({
             },
         }
     ],
-    cart:[{
-        product_id: mongoose.Schema.Types.ObjectId,
-    }],
+    cart:Object,
     orders:[{
         order_id:mongoose.Schema.Types.ObjectId,
     }],

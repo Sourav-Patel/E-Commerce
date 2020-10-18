@@ -57,7 +57,13 @@
 </div> -->
         <div>
             <a class="navbar-cart" href="/cart" style="text-decoration: none; color: #000;"><i
-                    class="fa fa-shopping-cart" style="font-size:26px"></i></a>
+                    class="fa fa-shopping-cart" style="font-size:26px">
+                    <% if (cart) { %>
+                        <span class="badge "><%=cart.cart.totalItems%>
+                        </span>
+                    <% } %>
+                    
+                </i></a>
         </div>
     </div>
 
