@@ -1,5 +1,22 @@
 <%- include("partials/headers/header"); %>
 <%- include("partials/navbar"); %>
-
-<h2>hello world</h2>
+ 
+<div class="fluid-container" style="margin-top: 2.5rem;">
+    <div style="display: flex; flex-flow: column; align-items: center;">
+    <div class="card" style="width: 25rem; padding-top: 1rem; display: flex; flex-flow: column; align-items: center;">
+        <img style="border-radius: 100%; width: 10rem; height: 10rem;" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" class="card-img-top" alt="...">
+        <div class="card-body" style="display: flex; flex-flow: column; align-items: center">
+          <h5 class="card-title"><%=customer.first_name%> <%=customer.last_name%></h5>
+          
+            <ul class="list-group list-group-flush" style="align-items: center;">
+              <li class="list-group-item"><i style="font-size:15px ;margin-right:15px;" class="fa">&#xf0e0;</i><%=customer.email%></li>
+              <li class="list-group-item"><i style="font-size:15px ;margin-right:15px;" class="fa">&#xf10b;</i><%=customer.mobile%></li>
+            </ul>
+   
+          <a href="#" class="btn btn-dark btn-block" style=" margin-top :1.5rem;">Your Orders</a>
+          <a href="#" class="btn btn-dark btn-block" style=" margin-top :0.5rem;">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+</div>
 <%- include("partials/footer"); %>

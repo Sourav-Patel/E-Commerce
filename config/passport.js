@@ -54,3 +54,30 @@ passport.use('local.signup', new LocalStrategy({
         });
     });
 }));
+
+passport.use('local.login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, function (req, email, password, done) {
+
+    User.findOne({
+        'email': email
+    }, function (err, user) {
+        if (err) {
+            return done(err);
+        };
+        if (!user) {
+            return done(null, false, {
+                message: "Email not Exist ! Please Register"
+            }); 
+        };
+        if(!user.validPassword(password)){
+            return done(null, false, { message: "Incorrect Password"})
+        };
+        if(user.validPassword(password)){
+            return done(null, user);
+        };
+       
+    });
+}));

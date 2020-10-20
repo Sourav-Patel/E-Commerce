@@ -1,0 +1,55 @@
+<%- include('partials/headers/header') %>
+
+<%- include("partials/navbar") %>
+
+<div class="container" style="margin-top: 1.5rem;">
+  <div class="row">
+    <div class="col-8">
+      <div class="card">
+        <ul class="list-group list-group-flush">
+
+          <% if (Cart != null) { %>
+            <% Cart.forEach(item => { %>     
+              <li class="list-group-item">
+                <div class="card mb-3" style="max-width: 540px;">
+                  <div class="row no-gutters">
+                    <div class="col-md-4">
+                      <img src=<%=item.item.images[0]%> class="card-img img-thumbnail" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title"><%=item.item.title%> </h5>
+                        <h6 class="card-text">Rs. <%= item.price %> </h6>
+                        <h5>Quantity</h5>
+                    <div class=" btn-group btn-group-sm mr-2" role="group" aria-label="First group">
+                      <a href="/increment/<%=item.item._id%>"><button type="button" class="btn btn-secondary">+</button></a>
+                        <button type="button" class="btn btn-secondary"><%=item.quantity%> </button>
+                       <a href="/reduce/<%=item.item._id%>"><button type="button" class="btn btn-secondary">-</button></a>
+                    </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <div class="card-header">
+              Price Detail
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"> <b> Total </b> - <b><%= totalItems %>  Items</b>  </li>
+              <li class="list-group-item"> <b> Total </b> - <b><%= totalPrice %>  Rs.</b>  </li>  
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+          <% }else{ %>
+            <h1>Cart is empty</h1>
+            <% } %>
+
+<%- include("partials/footer") %>
