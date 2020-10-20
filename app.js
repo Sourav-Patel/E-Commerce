@@ -377,7 +377,15 @@ app.route("/add-to-cart/:id").get(isLoggedIn, function (req, res) {
 });
 
 app.route("/user/profile").get(isLoggedIn, function (req, res) {
-    res.render('profile')
+    customerId = req.user.id;
+    Customer.findById(customerId, function (err, result) { 
+            if (err) {
+                console.log(err);
+                res.redirect("/");
+            }else{
+                res.render('profile', {customer : result});
+            }
+     });   
 });
 
 app.get("/user/logout", isLoggedIn, function (req, res, next) {
