@@ -14,7 +14,9 @@ var session = require('express-session')
 const passport = require('passport');
 const flash = require('connect-flash');
 const {
-    findById
+    findById,
+    find,
+    findOne
 } = require('./models/Customer');
 
 
@@ -167,19 +169,21 @@ const cart = require('./models/cart');
 // Using csurf 
 // app.use(csrfProtection);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.login = req.isAuthenticated();
-    
+
     res.locals.session = req.session;
-  
+
     next();
 });
 
-app.all("*", function (req, res, next) { 
+app.all("*", function (req, res, next) {
     res.locals.cart = null;
     if (req.isAuthenticated()) {
         res.locals.userId = req.user.id;
-        Cart.findOne({customerId : req.user.id}, function (err, result) { 
+        Cart.findOne({
+            customerId: req.user.id
+        }, function (err, result) {
             if (err) {
                 console.log(err);
                 res.locals.cart = null;
@@ -190,11 +194,11 @@ app.all("*", function (req, res, next) {
             if (!result) {
                 res.locals.cart = null;
             }
-            
-         })
+
+        })
     }
     next();
- });
+});
 
 // Requiring routes 
 
@@ -313,8 +317,9 @@ app.route("/add-to-cart/:id").get(isLoggedIn, function (req, res) {
     }, function (err, foundCart) {
         if (err) {
             console.log(err);
-        } if(foundCart) {
-            
+        }
+        if (foundCart) {
+
             var oldCart = foundCart.cart;
 
             var newCart = new Cart_loc(oldCart ? foundCart : {});
@@ -341,12 +346,15 @@ app.route("/add-to-cart/:id").get(isLoggedIn, function (req, res) {
                 res.redirect('back');
             })
 
-        } if (!foundCart) {
+        }
+        if (!foundCart) {
 
-            var dummyCart = {cart: {
-                items: null
-            }};
-            var newCart = new Cart_loc( dummyCart);
+            var dummyCart = {
+                cart: {
+                    items: null
+                }
+            };
+            var newCart = new Cart_loc(dummyCart);
 
             Product.findById(productId, function (err, result) {
                 if (err) {
@@ -377,9 +385,140 @@ app.get("/user/logout", isLoggedIn, function (req, res, next) {
     res.redirect('/');
 });
 
-app.get("/cart", function (req, res) {
-    res.render('cart');
-})
+app.get("/cart", isLoggedIn, function (req, res) {
+
+    Cart.findOne({
+        customerId: req.user.id
+    }, function (err, result) {
+        if (err) {
+            console.log(err);
+            res.redirect("back");
+        }
+        if (result) {
+            var arr = [];
+            for (var id in result.cart.items) {
+                arr.push(result.cart.items[id]);
+            }
+            res.render("cart", {
+                Cart: arr,
+                totalPrice: result.cart.totalPrice,
+                totalItems: result.cart.totalItems
+            });
+
+        }
+        if (!result) {
+            res.render('cart', {
+                Cart: null
+            });
+        }
+    });
+
+});
+
+// Reduce by 1 From Cart 
+
+app.get("/reduce/:productId", isLoggedIn, function (req, res, next) {
+
+    // product id from param 
+    var productId = req.params.productId;
+
+    // find document with customer id 
+    Cart.findOne({
+        customerId: req.user.id
+    }, function (err, result) {
+        // if err log err and redirect 
+        if (err) {
+            console.log(err);
+            res.redirect("/");
+        }
+
+        // if found 
+        if (result) {
+
+            // if item quantity is 0 then removing it 
+            if (result.cart.items[productId].quantity === 1) {
+                result.cart.totalItems--;
+                result.cart.totalPrice -= result.cart.items[productId].item.price.regular_price;
+                delete result.cart.items[productId];
+                Cart.replaceOne({
+                        customerId: req.user.id
+                    }, result,
+                    null,
+                    function (err, docs) {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            // console.log(docs);
+                        }
+                    })
+                console.log(result);
+
+                if (result.cart.totalItems === 0) {
+                    Cart.deleteOne({
+                        customerId: req.user.id
+                    }, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    })
+                }
+            } else {
+                result.cart.items[productId].quantity--;
+                result.cart.items[productId].price = result.cart.items[productId].price - result.cart.items[productId].item.price.regular_price;
+                result.cart.totalItems--;
+                result.cart.totalPrice -= result.cart.items[productId].item.price.regular_price;
+
+                Cart.replaceOne({
+                        customerId: req.user.id
+                    }, result,
+                    null,
+                    function (err, docs) {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            // console.log(docs);
+                        }
+                    });
+            }
+            res.redirect("/cart");
+        }
+    });
+
+});
+
+app.get("/increment/:productId", isLoggedIn, function (req, res, next) {
+
+    var productId = req.params.productId;
+    Cart.findOne({
+        customerId: req.user.id
+    }, function (err, result) {
+        if (err) {
+            console.log(err);
+            res.redirect("/");
+        }
+        if (result) {
+
+            result.cart.items[productId].quantity++;
+            result.cart.items[productId].price = result.cart.items[productId].price + result.cart.items[productId].item.price.regular_price;
+            result.cart.totalItems++;
+            result.cart.totalPrice += result.cart.items[productId].item.price.regular_price;
+
+            Cart.replaceOne({
+                    customerId: req.user.id
+                }, result,
+                null,
+                function (err, docs) {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        // console.log(docs);
+                    }
+                });
+            res.redirect("/cart");
+        }
+    });
+
+});
 
 
 function isLoggedIn(req, res, next) {
